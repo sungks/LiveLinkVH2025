@@ -1,8 +1,29 @@
-import axios from 'axios';
-import { auth } from '../firebase/firebaseConfig';
+import { useState } from "react";
+import axios from "axios";
 
-const user = auth.currentUser;
-const idToken = await user.getIdToken();
+export default function PhoneInput({ onSuccess }) {
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
 
-// Send token to your server
-await axios.post('http://localhost:3000/verify-token', { idToken });
+  const handleSubmit = async () => {
+    try {
+      await axios.post("http://localhost:3000/start-verification", { phone });
+      onSuccess(phone);
+    } catch (err) {
+      setError(err.response?.data?.message || "Verification failed");
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="tel"
+        placeholder="+1..."
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <button onClick={handleSubmit}>Send Code</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+    </div>
+  );
+}
