@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plan Your Event</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #recommendationOutput {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Plan Your Event</h1>
+  <p>Enter your event idea and group size below, and we’ll suggest something fun!</p>
+
+  <label for="eventDescription">What kind of event do you want?</label>
+  <input type="text" id="eventDescription" placeholder="e.g., pottery making, tea party" />
+
+  <label for="groupSize">How many people will attend?</label>
+  <input type="text" id="groupSize" placeholder="e.g., 4 people, 8 people" />
+
+  <button onclick="getRecommendation()">Get Recommendation</button>
+
+  <div id="recommendationOutput"></div>
+
+  <script>
+    async function getRecommendation() {
+      const eventType = document.getElementById('eventDescription').value.trim();
+      const groupSize = document.getElementById('groupSize').value.trim();
+      const output = document.getElementById('recommendationOutput');
+
+      if (!eventType || !groupSize) {
+        output.innerText = "⚠️ Please fill out both fields.";
+        return;
+      }
+
+      try {
+        const response = await fetch('/recommend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventType, groupSize })
+        });
+
+        const data = await response.json();
+
+        if (data.recommendation) {
+          output.innerText = `📝 AI Recommendation: ${data.recommendation}`;
+        } else {
+          output.innerText = "⚠️ No recommendation received.";
+        }
+      } catch (err) {
+        output.innerText = "❌ Failed to get recommendation.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

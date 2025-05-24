@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import Events from './Events';
 import Friends from './Friends';
 import Discovery from './Discovery';
+import Profile from './Profile';
 import '../App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="events" element={<Events />} />
           <Route path="friends" element={<Friends />} />
           <Route path="discovery" element={<Discovery />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>
